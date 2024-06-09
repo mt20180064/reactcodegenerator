@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="specification" type="specification"/>
+    <xs:complexType name="specification">
+        <xs:sequence>
+            <xs:element name="useCase" type="useCase" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="useCase" >
+        <xs:sequence>
+            <xs:element name="actor" type="actor" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="entity" type="entity" />
+            <xs:element name="mainScenario" type="mainScenario" minOccurs="1"></xs:element>
+            <xs:element name="alternativeScenarios" type="alternativeScenario" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="include" type="include" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="usecaseID" type="xs:ID" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="precondition" type="xs:string"/>
+        <xs:attribute name="postcondition" type="xs:string"/>
+        <xs:attribute name="order" type="xs:int" use="required"/>
+        <xs:attribute name="template" type="xs:string" use="required"/>
+    </xs:complexType>
+	
+    <xs:complexType name="actor">
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="scenarioStep">
+        <xs:sequence>
+            <xs:element name="extends" type="extends" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="stepNumber" type="xs:int" use="required"/>
+        <xs:attribute name="action" type="action" use="required"/>
+        <xs:attribute name="entity" type="xs:IDREF" use="required" />
+    </xs:complexType>
+    <xs:complexType name="entity">
+        <xs:sequence>
+            <xs:element name="attribute" type="attribute" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+    <xs:complexType name="attribute">
+        <xs:complexContent>
+            <xs:extension base="entity">
+                <xs:attribute name="type" type="attributeType" default="STRING" use="optional"/>
+                <xs:attribute name="identity" type="xs:boolean" default="false" use="optional"/>
+                <xs:attribute name="required" type="xs:boolean" default="true" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="mainScenario">
+        <xs:sequence>
+            <xs:element name="step" type="scenarioStep" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="alternativeScenario">
+        <xs:sequence>
+            <xs:element name="steps" type="scenarioStep" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="referenceMainScenarioNumber" type="xs:int" use="required"/>
+        <xs:attribute name="precondition" type="xs:string"/>
+        <xs:attribute name="errorMessage" type="xs:string"/>
+    </xs:complexType>
+    <xs:simpleType name="action">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ENTRY"/>
+            <xs:enumeration value="SELECTION"/>            
+            <xs:enumeration value="REQUEST_OPERATION"/>
+            <xs:enumeration value="SYSTEM_ACTION"/>
+            <xs:enumeration value="OPERATION_REPORT"/>
+        </xs:restriction>
+    </xs:simpleType>
+        
+    <xs:simpleType name="attributeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NUMBER"/>
+            <xs:enumeration value="STRING"/>
+            <xs:enumeration value="DATE"/>
+            <xs:enumeration value="LOGICAL"/>
+        </xs:restriction>
+    </xs:simpleType>
+        
+    <xs:complexType name="include">
+        <xs:attribute name="child" type="xs:IDREF" use="required"/>
+        <xs:attribute name="joinedByAttribute" type="xs:IDREF" use="required"/>
+    </xs:complexType>
+        
+    <xs:complexType name="extends">
+		
+        <xs:attribute name="useCase" type="xs:IDREF"/>
+        <xs:attribute name="joinedByAttribute" type="xs:IDREF" use="required"/>
+		
+    </xs:complexType>
+        
+</xs:schema>
