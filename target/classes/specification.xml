@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specification xsi:noNamespaceSchemaLocation="D:\Radovi\Doktorat\AlatiZaKreiranjeUlazneSpecifikacije\NovaVerzijaUlazneSpecifikacije\useCaseModel.xsd" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+
+    <useCase    
+        usecaseID="UCPrijavaSudije" 
+        name="PrijavaSudije" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="1"
+        template="form"
+    >
+
+        <actor name="Sudija"/>
+    
+        <entity id="EntitySudija" name="Sudija">
+            <attribute id="username" name="username" type="STRING"/>
+            <attribute id="password" name="password" type="STRING"/>
+        </entity>
+
+        <mainScenario>
+            <step stepNumber="1" action="ENTRY" entity="username"/>
+            <step stepNumber="2" action="ENTRY" entity="password"/>
+            <step stepNumber="3" action="REQUEST_OPERATION" entity="EntitySudija"/>
+            <step stepNumber="4" action="SYSTEM_ACTION" entity="EntitySudija"/>
+            <step stepNumber="5" action="OPERATION_REPORT" entity="EntitySudija"/>
+        </mainScenario>
+    
+    </useCase>
+
+    <useCase 
+        usecaseID="UCKreiranjeIgraca" 
+        name="KreiranjeIgraca" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="2"
+        template="form"
+    >
+        <actor name="Sudija"/>
+        <entity id="EntityIgrac" name="Igrac">
+            <attribute id="igracID" name="igracID" type="NUMBER" identity="true"/>
+            <attribute id="name" name="name"  type="STRING" />
+            <attribute id="surname" name="surname"  type="STRING" />
+            <attribute id="rejting" name="rejting" type="NUMBER"/>
+            <attribute id="kategorija" name="kategorija" type="STRING"/>
+            <attribute id="klub" name="klub" type="NUMBER"/>
+        </entity>
+
+        <mainScenario>
+            <step stepNumber="1" action="ENTRY" entity="name"/>
+            <step stepNumber="2" action="ENTRY" entity="surname"/>
+            <step stepNumber="3" action="ENTRY" entity="rejting"/>
+            <step stepNumber="4" action="ENTRY" entity="kategorija"/>
+            <step stepNumber="5" action="SELECTION" entity="klub">
+            </step>
+            <step stepNumber="6" action="REQUEST_OPERATION" entity="EntityIgrac"/>
+            <step stepNumber="7" action="SYSTEM_ACTION" entity="EntityIgrac"/>
+            <step stepNumber="8" action="OPERATION_REPORT" entity="EntityIgrac"/>
+        </mainScenario>
+    
+    </useCase>
+  
+ 
+   
+
+    <useCase 
+        usecaseID="UCKreiranjeTurnira" 
+        name="KreiranjeTurnira" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="3"
+        template="form"
+    >
+        <entity id="EntityTurnir" name="Turnir">
+            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true"/>
+            <attribute id="naziv" name="naziv" type= "STRING"/>
+            <attribute id="mesto" name="mesto" type= "STRING"/>
+            <attribute id="tip" name="tip" type= "STRING"/>
+            <attribute id="tempo" name="tempo" type= "STRING"/>
+        </entity>
+
+        <mainScenario>
+            <step stepNumber="1" action="ENTRY" entity="naziv"/>
+            <step stepNumber="2" action="ENTRY" entity="mesto"/>
+            <step stepNumber="3" action="SELECTION" entity="tip"/>
+            <step stepNumber="4" action="SELECTION" entity="tempo"/>
+            <step stepNumber="5" action="REQUEST_OPERATION" entity="EntityTurnir"/>
+            <step stepNumber="6" action="SYSTEM_ACTION" entity="EntityTurnir"/>
+            <step stepNumber="7" action="OPERATION_REPORT" entity="EntityTurnir"/>
+        </mainScenario>
+    
+    </useCase>
+    
+    <useCase 
+        usecaseID="UCPocetakTurnira" 
+        name="PocetakTurnira" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="4"
+        template="table"
+    >
+        <actor name="Sudija"/>
+        <entity id="EntityTurnir" name="Turnir">
+            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true"/>
+            <attribute id="naziv" name="naziv" type= "STRING"/>
+            <attribute id="mesto" name="mesto" type= "STRING"/>
+            <attribute id="tip" name="tip" type= "STRING"/>
+            <attribute id="tempo" name="tempo" type= "STRING"/>
+        </entity>
+
+        <mainScenario>
+            <step stepNumber="1" action="SELECTION" entity="EntityTurnir"/>
+            <step stepNumber="2" action="REQUEST_OPERATION" entity="EntityTurnir"/>
+            <step stepNumber="3" action="SYSTEM_ACTION" entity="EntityTurnir"/>
+            <step stepNumber="4" action="OPERATION_REPORT" entity="EntityTurnir"/>
+        </mainScenario>
+    
+    </useCase>
+    
+    
+     <useCase 
+        usecaseID="UCParovanje" 
+        name="Parovanje" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="5"
+        template="table"
+    >
+        <actor name="Sudija"/>
+        <entity id="EntityPartija" name="Partija">
+            <attribute id="PartijaID" name="PartijaID" type="NUMBER"  identity="true"/>
+            <attribute id="tabla" name="tabla" type="NUMBER"/>
+            <attribute id="beli" name="beli" type= "STRING"/>
+            <attribute id="crni" name="crni" type= "STRING"/>
+            <attribute id="bodovibeli" name="bodovibeli" type= "NUMBER"/>
+            <attribute id="bodovicrni" name="bodovicrni" type= "NUMBER"/>
+        </entity>
+
+        <mainScenario>
+            <step stepNumber="1" action="SELECTION" entity="EntityPartija"/>
+            <step stepNumber="2" action="REQUEST_OPERATION" entity="EntityPartija"/>
+            <step stepNumber="3" action="SYSTEM_ACTION" entity="EntityPartija"/>
+            <step stepNumber="4" action="OPERATION_REPORT" entity="EntityPartija"/>
+            <step stepNumber="5" action="REQUEST_OPERATION" entity="EntityPartija"/>
+            <step stepNumber="6" action="SYSTEM_ACTION" entity="EntityPartija"/>
+            <step stepNumber="7" action="OPERATION_REPORT" entity="EntityPartija"/>
+            <step stepNumber="8" action="REQUEST_OPERATION" entity="EntityPartija"/>
+            <step stepNumber="9" action="SYSTEM_ACTION" entity="EntityPartija"/>
+            <step stepNumber="10" action="OPERATION_REPORT" entity="EntityPartija"/>
+        </mainScenario>
+    
+    </useCase>
+    
+     <useCase 
+        usecaseID="UCPlasman" 
+        name="Plasman" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="6"
+        template="table"
+    >
+        <actor name="Sudija"/>
+        <entity id="EntityIgrac" name="Igrac">
+            <attribute id="IgracID" name="IgracID" type="NUMBER"  identity="true"/>
+            <attribute id="rang" name="rang" type= "NUMBER"/>
+            <attribute id="ime" name="ime" type= "STRING"/>
+            <attribute id="prezime" name="prezime" type= "STRING"/>
+            <attribute id="poeni" name="poeni" type= "NUMBER"/>
+        </entity>
+
+        <mainScenario>
+            <step stepNumber="1" action="SELECTION" entity="EntityIgrac"/>
+            <step stepNumber="2" action="REQUEST_OPERATION" entity="EntityIgrac"/>
+            <step stepNumber="3" action="SYSTEM_ACTION" entity="EntityIgrac"/>
+            <step stepNumber="4" action="OPERATION_REPORT" entity="EntityIgrac"/>
+        </mainScenario>
+    
+    </useCase>
+     <useCase 
+        usecaseID="UCPregledZavrsenogTurnira" 
+        name="PregledZavrsenogTurnira" 
+        precondition="Nema preduslova" 
+        postcondition="Nema postuslova"
+        order="7"
+        template="display"
+    >
+        <actor name="Sudija"/>
+        <entity id="EntityTurnir" name="Turnir">
+            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true"/>
+            <attribute id="sudija" name="sudija" type="STRING"/>
+            <attribute id="status" name="status" type= "STRING"/>
+            <attribute id="prvi" name="prvi" type= "STRING"/>
+            <attribute id="drugi" name="drugi" type= "STRING"/>
+            <attribute id="treci" name="treci" type= "STRING"/>
+        </entity>
+
+        <mainScenario>
+            
+            <step stepNumber="1" action="REQUEST_OPERATION" entity="EntityTurnir"/>
+            <step stepNumber="2" action="SYSTEM_ACTION" entity="EntityTurnir"/>
+            <step stepNumber="3" action="OPERATION_REPORT" entity="EntityTurnir"/>
+        </mainScenario>
+    
+    </useCase>
+</specification>
+
+
