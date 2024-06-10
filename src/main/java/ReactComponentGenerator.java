@@ -1,6 +1,7 @@
 
-import generated.Actor;
+
 import generated.Attribute;
+
 import generated.Entity;
 import generated.ScenarioStep;
 import generated.Specification;
@@ -18,10 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.swing.JTable;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
+
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+
 
 public class ReactComponentGenerator {
 
@@ -61,10 +61,28 @@ public class ReactComponentGenerator {
         reactCode.append("  const handleChange = (e) => {\n");
         reactCode.append("    setFormData({ ...formData, [e.target.name]: e.target.value });\n");
         reactCode.append("  };\n\n");
-        reactCode.append("  const handleSubmit = (e) => {\n");
-        reactCode.append("    e.preventDefault();\n");
-        reactCode.append("    console.log('Form data submitted:', formData);\n");
-        reactCode.append("  };\n\n");
+        reactCode.append("function validate(formData){\n" +
+" const allContainAtSign = Object.values(formData).every(value => value.includes('@'));\n" +
+" if (allContainAtSign) return true;\n" +
+" else return false;\n" +
+"}\n");
+reactCode.append("const handleSubmit = (e) => {\n" +
+"  e.preventDefault();\n" +
+"  if (validate(formData)) {\n" +
+"    console.log('Form data submitted:', formData);\n" +
+"  } else {\n" +
+"    console.log('Neispravan unos');\n" +
+"  }\n" +
+"}; \n");
+           reactCode.append(
+"  const tableStyle = {\n" +
+"    borderCollapse: 'collapse', \n" +
+"    width: '70%'\n" +
+"  };\n");
+           reactCode.append("const cellStyle = {\n" +
+"    border: '1px solid black',\n" +
+"    padding: '8px'\n" +
+"  };\n");
         reactCode.append("  return (\n");
         reactCode.append("    <form onSubmit={handleSubmit}>\n");
 
@@ -84,7 +102,24 @@ public class ReactComponentGenerator {
         List<Attribute> attributes = useCase.getEntity().getAttribute();
        // reactCode.append("        <h4>").append(entity.getName()).append("</h4>\n");
        if (useCase.getTemplate().equals("table")){
-           int len = useCase.getEntity().getAttribute().size();
+           if (useCase.getOrder()==4){
+        reactCode.append("<select>\n" +
+"          <option value=\"option1\">Kriterijum 1</option>\n" +
+"          <option value=\"option2\">Kriterijum 2</option>\n" +
+"          <option value=\"option3\">Kriterijum 3</option>\n" +
+"        </select>\n" +
+"        <input type=\"text\" placeholder=\"Unesite vrednost kriterijuma\" />\n" +
+"        <button \n" +
+"          type=\"submit\" \n" +
+"          style={{ \n" +
+"            border: '1px solid black', \n" +
+"            borderRadius: '0px', \n" +
+"            backgroundColor: 'lightgray' \n" +
+"          }}\n" +
+"        >\n" +
+"          Pretraga\n" +
+"        </button>\n " );
+           }
            ArrayList<String> kolone = new ArrayList<String>();
            for (Attribute attribute : useCase.getEntity().getAttribute()) {
                kolone.add(attribute.getName());
@@ -95,7 +130,7 @@ public class ReactComponentGenerator {
            String reactCodeTemplate = 
   
     
-    "        <table>\n" +
+    "        <table style={tableStyle}>\n" +
     "            <thead>\n" +
     "                <tr>\n" +
     "                    %s\n" +
@@ -104,21 +139,27 @@ public class ReactComponentGenerator {
     "            <tbody>\n" +
 
     "                    <tr>\n" +
-    "                        <td>1</td>" +
-                  " <td>2</td>" +
-                       "<td>1</td>" +
-                           "<td>1</td>" +
-    "                    </tr>\n" +
+"                        <td style={cellStyle}>1</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>     \n" +
+"                        <td style={cellStyle}>upisi vrednost</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>        \n" +
+"                        </tr>\n" +
+"                        \n" +
+"                        <tr>\n" +
+"    <td style={cellStyle}>2</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>     \n" +
+"                        <td style={cellStyle}>upisi vrednost</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>\n" +
+"    </tr>\n" +
+"    <tr>\n" +
+"    <td style={cellStyle}>3</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>     \n" +
+"                        <td style={cellStyle}>upisi vrednost</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>\n" +
+"    </tr>\n"+ 
                   
     "            </tbody>\n" +
     "        </table>\n" +
     "\n" ;
     
 
-String tableHeaderTemplate = "<th>%s</th>";
+String tableHeaderTemplate = "<th style={cellStyle}>%s</th>";
 String tableDataTemplate = "<td>{row['%s']}</td>";
 DefaultTableModel model = (DefaultTableModel) tabelaTurnira.getModel();
-int rowCount = model.getRowCount();
 int columnCount = model.getColumnCount();
 
    
@@ -150,6 +191,7 @@ reactCode.append(reactTable);
         for (ScenarioStep step : useCase.getMainScenario().getStep()){
                 Attribute attribute =findAttribute(step, attributes);
                 if (attribute!=null){
+                    
                      if (step.getAction().value().equals("ENTRY")){
             reactCode.append("        <div>\n");
             reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
@@ -160,7 +202,7 @@ reactCode.append(reactTable);
                           reactCode.append("        <div>\n");
             reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
             reactCode.append("          <select name=\"\" class=\"\">\n" +
-"        <option value=\"\" disabled selected>").append(attribute.getName()).append("</option></select>\"\n");
+"        <option value=\"\" disabled selected>").append(attribute.getName()).append("</option></select>\n");
             reactCode.append("        </div>\n");
                      }
                      }
@@ -173,7 +215,7 @@ reactCode.append(reactTable);
 "      padding: '10px'\n"+
 "    }}>").append(useCase.getName()).append("</button>\n");
                     
-                } //else reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
+                } 
         
         
         }
@@ -181,8 +223,26 @@ reactCode.append(reactTable);
         
            for (Attribute attribute : useCase.getEntity().getAttribute()) {
                reactCode.append("        <div>\n");
-            reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
-            reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
+            reactCode.append("          <label style={{ \n" +
+"      border: '1px solid black', \n" +
+       " display: 'inline-blocks', \n"+            
+"      borderRadius: '1px', \n" +
+"      margin: '25px', \n" +
+"      padding: '3px' \n"+
+                  
+"    }} >").append(attribute.getName()).append(": ").append("</label>\n");
+            
+            reactCode.append("          <label style={{ \n" +
+"      border: '1px solid black', \n" +
+                    " display: 'inline-blocks', \n"+      
+"      borderRadius: '1px', \n" +
+"      margin: '25px', \n" +
+"      padding: '3px', \n"+
+                    "width: '20px'\n"+
+                   
+"    }} >").append(attribute.getName()).append("</label>\n");
+            reactCode.append("        <br></br>\n");
+             reactCode.append("        <br></br>\n");
             reactCode.append("        </div>\n");
     }
     }
@@ -255,6 +315,8 @@ reactCode.append(reactTable);
         } 
         System.out.println("nouu");return null;
     }
+
+    
 
    
 }

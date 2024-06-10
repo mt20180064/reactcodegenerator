@@ -48,6 +48,8 @@
                 <xs:attribute name="type" type="attributeType" default="STRING" use="optional"/>
                 <xs:attribute name="identity" type="xs:boolean" default="false" use="optional"/>
                 <xs:attribute name="required" type="xs:boolean" default="true" use="optional"/>
+                <!--ovo je sada deo koji dodajem za validaciju, ne znam da li ce uspeti-->
+                <xs:attribute name="validation" type="validationType" default ="typeBased" use = "optional"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -73,6 +75,19 @@
             <xs:enumeration value="OPERATION_REPORT"/>
         </xs:restriction>
     </xs:simpleType>
+    <!--ovo je sada deo koji dodajem za validaciju, ne znam da li ce uspeti-->
+    <xs:complexType name="validation">
+             <xs:attribute name="validationType" type="validationType" default="typeBased" use="optional"/>
+    </xs:complexType>
+    
+    <xs:simpleType name="validationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="typeBased"/>
+            <xs:enumeration value="generalContext"/>
+            <xs:enumeration value="specificContext"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
         
     <xs:simpleType name="attributeType">
         <xs:restriction base="xs:string">
@@ -82,6 +97,7 @@
             <xs:enumeration value="LOGICAL"/>
         </xs:restriction>
     </xs:simpleType>
+    
         
     <xs:complexType name="include">
         <xs:attribute name="child" type="xs:IDREF" use="required"/>

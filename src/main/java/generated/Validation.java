@@ -15,15 +15,15 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for actor complex type.
+ * <p>Java class for validation complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="actor"&gt;
+ * &lt;complexType name="validation"&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" /&gt;
+ *       &lt;attribute name="validationType" type="{}validationType" default="typeBased" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -32,34 +32,38 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "actor")
-public class Actor {
+@XmlType(name = "validation")
+public class Validation {
 
-    @XmlAttribute(name = "name")
-    protected String name;
+    @XmlAttribute(name = "validationType")
+    protected ValidationType validationType;
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the validationType property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link ValidationType }
      *     
      */
-    public String getName() {
-        return name;
+    public ValidationType getValidationType() {
+        if (validationType == null) {
+            return ValidationType.TYPE_BASED;
+        } else {
+            return validationType;
+        }
     }
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the validationType property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link ValidationType }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setValidationType(ValidationType value) {
+        this.validationType = value;
     }
 
 }

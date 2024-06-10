@@ -14,8 +14,8 @@
         <actor name="Sudija"/>
     
         <entity id="EntitySudija" name="Sudija">
-            <attribute id="username" name="username" type="STRING"/>
-            <attribute id="password" name="password" type="STRING"/>
+            <attribute id="username" name="username" type="STRING" validation="generalContext"/>
+            <attribute id="password" name="password" type="STRING" validation="generalContext"/>
         </entity>
 
         <mainScenario>
@@ -38,19 +38,19 @@
     >
         <actor name="Sudija"/>
         <entity id="EntityIgrac" name="Igrac">
-            <attribute id="igracID" name="igracID" type="NUMBER" identity="true"/>
-            <attribute id="name" name="name"  type="STRING" />
-            <attribute id="surname" name="surname"  type="STRING" />
-            <attribute id="rejting" name="rejting" type="NUMBER"/>
-            <attribute id="kategorija" name="kategorija" type="STRING"/>
-            <attribute id="klub" name="klub" type="NUMBER"/>
+            <attribute id="igracID" name="igracID" type="NUMBER" identity="true" validation ="typeBased"/>
+            <attribute id="name" name="name"  type="STRING" validation="generalContext" />
+            <attribute id="surname" name="surname"  type="STRING" validation="generalContext" />
+            <attribute id="rejting" name="rejting" type="NUMBER" validation="specificContext"/>
+            <attribute id="kategorija" name="kategorija" type="STRING" validation="specificContext"/>
+            <attribute id="klub" name="klub" type="NUMBER" validation="typeBased"/>
         </entity>
 
         <mainScenario>
             <step stepNumber="1" action="ENTRY" entity="name"/>
             <step stepNumber="2" action="ENTRY" entity="surname"/>
-            <step stepNumber="3" action="ENTRY" entity="rejting"/>
-            <step stepNumber="4" action="ENTRY" entity="kategorija"/>
+            <step stepNumber="3" action="SELECTION" entity="rejting"/>
+            <step stepNumber="4" action="SELECTION" entity="kategorija"/>
             <step stepNumber="5" action="SELECTION" entity="klub">
             </step>
             <step stepNumber="6" action="REQUEST_OPERATION" entity="EntityIgrac"/>
@@ -72,11 +72,11 @@
         template="form"
     >
         <entity id="EntityTurnir" name="Turnir">
-            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true"/>
-            <attribute id="naziv" name="naziv" type= "STRING"/>
-            <attribute id="mesto" name="mesto" type= "STRING"/>
-            <attribute id="tip" name="tip" type= "STRING"/>
-            <attribute id="tempo" name="tempo" type= "STRING"/>
+            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true" validation = "typeBased"/>
+            <attribute id="naziv" name="naziv" type= "STRING" validation="specificContext"/>
+            <attribute id="mesto" name="mesto" type= "STRING" validation="specificContext"/>
+            <attribute id="tip" name="tip" type= "STRING" validation="specificContext"/>
+            <attribute id="tempo" name="tempo" type= "STRING" validation="specificContext"/>
         </entity>
 
         <mainScenario>
@@ -101,11 +101,11 @@
     >
         <actor name="Sudija"/>
         <entity id="EntityTurnir" name="Turnir">
-            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true"/>
-            <attribute id="naziv" name="naziv" type= "STRING"/>
-            <attribute id="mesto" name="mesto" type= "STRING"/>
-            <attribute id="tip" name="tip" type= "STRING"/>
-            <attribute id="tempo" name="tempo" type= "STRING"/>
+            <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true" validation="typeBased"/>
+            <attribute id="naziv" name="naziv" type= "STRING" validation="specificContext"/>
+            <attribute id="mesto" name="mesto" type= "STRING" validation="specificContext" />
+            <attribute id="tip" name="tip" type= "STRING" validation="specificContext" />
+            <attribute id="tempo" name="tempo" type= "STRING" validation="specificContext" />
         </entity>
 
         <mainScenario>
@@ -128,8 +128,8 @@
     >
         <actor name="Sudija"/>
         <entity id="EntityPartija" name="Partija">
-            <attribute id="PartijaID" name="PartijaID" type="NUMBER"  identity="true"/>
-            <attribute id="tabla" name="tabla" type="NUMBER"/>
+            <attribute id="PartijaID" name="PartijaID" type="NUMBER"  identity="true" validation = "typeBased"/>
+            <attribute id="tabla" name="tabla" type="NUMBER" validation="specificContext"/>
             <attribute id="beli" name="beli" type= "STRING"/>
             <attribute id="crni" name="crni" type= "STRING"/>
             <attribute id="bodovibeli" name="bodovibeli" type= "NUMBER"/>

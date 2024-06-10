@@ -4,6 +4,7 @@ generated\UseCase.class
 ReactComponentGenerator.class
 generated\Extends.class
 generated\Specification.class
+generated\Validation.class
 generated\MainScenario.class
 generated\Include.class
 generated\ObjectFactory.class
@@ -11,4 +12,5 @@ generated\Action.class
 generated\ScenarioStep.class
 generated\AttributeType.class
 generated\AlternativeScenario.class
+generated\ValidationType.class
 generated\Actor.class
