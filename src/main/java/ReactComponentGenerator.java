@@ -2,7 +2,7 @@
 
 import generated.Attribute;
 
-import generated.Entity;
+
 import generated.ScenarioStep;
 import generated.Specification;
 import generated.UseCase;
@@ -27,24 +27,20 @@ public class ReactComponentGenerator {
 
     public static void main(String[] args) {
         try {
-            // ?????? XML ???????? ? ??????????? ? Java ???????
+           
             JAXBContext jaxbContext = JAXBContext.newInstance(Specification.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Specification specification = (Specification) unmarshaller.unmarshal(new File("src/main/resources/specification.xml"));
 
-            // ?????? ????? ?????????? ?? App.js
             List<String> componentNames = new ArrayList<>();
 
-            // ?????????? React ???? ?? ????? UseCase
             for (UseCase useCase : specification.getUseCase()) {
                 String componentName = useCase.getName() + "Component";
                 componentNames.add(componentName);
                 String reactCode = generateUseCaseComponent(useCase);
                 saveToFile("src/main/javascript/" + componentName + ".js", reactCode);
-                System.out.println("React ?????????? ?? ??????? ?????????? ?? " + useCase.getName());
             }
 
-            // ?????????? App.js
             String appJsCode = generateAppJs(componentNames);
             saveToFile("src/main/javascript/App.js", appJsCode);
 
@@ -61,19 +57,8 @@ public class ReactComponentGenerator {
         reactCode.append("  const handleChange = (e) => {\n");
         reactCode.append("    setFormData({ ...formData, [e.target.name]: e.target.value });\n");
         reactCode.append("  };\n\n");
-        reactCode.append("function validate(formData){\n" +
-" const allContainAtSign = Object.values(formData).every(value => value.includes('@'));\n" +
-" if (allContainAtSign) return true;\n" +
-" else return false;\n" +
-"}\n");
-reactCode.append("const handleSubmit = (e) => {\n" +
-"  e.preventDefault();\n" +
-"  if (validate(formData)) {\n" +
-"    console.log('Form data submitted:', formData);\n" +
-"  } else {\n" +
-"    console.log('Neispravan unos');\n" +
-"  }\n" +
-"}; \n");
+      
+       if (useCase.getTemplate().equals("tableSablon")){
            reactCode.append(
 "  const tableStyle = {\n" +
 "    borderCollapse: 'collapse', \n" +
@@ -84,24 +69,10 @@ reactCode.append("const handleSubmit = (e) => {\n" +
 "    padding: '8px'\n" +
 "  };\n");
         reactCode.append("  return (\n");
-        reactCode.append("    <form onSubmit={handleSubmit}>\n");
-
+        reactCode.append("<>");
         reactCode.append("      <h2>").append(useCase.getName()).append("</h2>\n");
-
-        // ?????? ??? ??????
-        /*if (useCase.getActor() != null) {
-            reactCode.append("      <h3>Actors:</h3>\n");
-            for (Actor actor : useCase.getActor()) {
-                reactCode.append("      <p>").append(actor.getName()).append("</p>\n");
-            }
-        }*/
-
-        // ???????? ? ???????? ??? ?????? ????
-        Entity entity = useCase.getEntity();
         reactCode.append("      <div>\n");
-        List<Attribute> attributes = useCase.getEntity().getAttribute();
-       // reactCode.append("        <h4>").append(entity.getName()).append("</h4>\n");
-       if (useCase.getTemplate().equals("table")){
+       
            if (useCase.getOrder()==4){
         reactCode.append("<select>\n" +
 "          <option value=\"option1\">Kriterijum 1</option>\n" +
@@ -139,26 +110,17 @@ reactCode.append("const handleSubmit = (e) => {\n" +
     "            <tbody>\n" +
 
     "                    <tr>\n" +
-"                        <td style={cellStyle}>1</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>     \n" +
-"                        <td style={cellStyle}>upisi vrednost</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>        \n" +
+                     "%s\n"+
 "                        </tr>\n" +
-"                        \n" +
-"                        <tr>\n" +
-"    <td style={cellStyle}>2</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>     \n" +
-"                        <td style={cellStyle}>upisi vrednost</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>\n" +
-"    </tr>\n" +
-"    <tr>\n" +
-"    <td style={cellStyle}>3</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>     \n" +
-"                        <td style={cellStyle}>upisi vrednost</td> <td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td><td style={cellStyle}>upisi vrednost</td>\n" +
-"    </tr>\n"+ 
-                  
+                   
+           
     "            </tbody>\n" +
     "        </table>\n" +
     "\n" ;
     
 
 String tableHeaderTemplate = "<th style={cellStyle}>%s</th>";
-String tableDataTemplate = "<td>{row['%s']}</td>";
+String tableDataTemplate = "<td style={cellStyle}>upisi vrednost</td>";
 DefaultTableModel model = (DefaultTableModel) tabelaTurnira.getModel();
 int columnCount = model.getColumnCount();
 
@@ -186,8 +148,28 @@ reactCode.append(reactTable);
                 }
            }
     
-           
-       } else if (useCase.getTemplate().equals("form")){
+        
+       } else if (useCase.getTemplate().equals("formaSablon")){
+          reactCode.append("function validate(formData){\n" +
+" const allContainAtSign = Object.values(formData).every(value => value.includes('@'));\n" +
+" if (allContainAtSign) return true;\n" +
+" else return false;\n" +
+"}\n");
+reactCode.append("const handleSubmit = (e) => {\n" +
+"  e.preventDefault();\n" +
+"  if (validate(formData)) {\n" +
+"    console.log('Form data submitted:', formData);\n" +
+"  } else {\n" +
+"    console.log('Neispravan unos');\n" +
+"  }\n" +
+"}; \n");
+        reactCode.append("  return (\n");
+        reactCode.append("    <form onSubmit={handleSubmit}>\n");
+
+        reactCode.append("      <h2>").append(useCase.getName()).append("</h2>\n");
+       
+        reactCode.append("      <div>\n");
+        List<Attribute> attributes = useCase.getEntity().getAttribute();
         for (ScenarioStep step : useCase.getMainScenario().getStep()){
                 Attribute attribute =findAttribute(step, attributes);
                 if (attribute!=null){
@@ -218,9 +200,17 @@ reactCode.append(reactTable);
                 } 
         
         
-        }
-    } else if (useCase.getTemplate().equals("display")){
+        } 
+    } else if (useCase.getTemplate().equals("displaySablon")){
         
+        reactCode.append("  return (\n");
+        reactCode.append("<>");
+
+        reactCode.append("      <h2>").append(useCase.getName()).append("</h2>\n");
+
+       
+        reactCode.append("      <div>\n");
+       
            for (Attribute attribute : useCase.getEntity().getAttribute()) {
                reactCode.append("        <div>\n");
             reactCode.append("          <label style={{ \n" +
@@ -243,16 +233,25 @@ reactCode.append(reactTable);
 "    }} >").append(attribute.getName()).append("</label>\n");
             reactCode.append("        <br></br>\n");
              reactCode.append("        <br></br>\n");
-            reactCode.append("        </div>\n");
-    }
+            reactCode.append("</div>\n");
+            
+    } reactCode.append("      </div>\n");
+        reactCode.append("</>\n);\n") ;  
+       
+           
     }
     
-        reactCode.append("      </div>\n");
-      
-
-       // reactCode.append("      <button type=\"submit\">Submit</button>\n");
-        reactCode.append("    </form>\n");
-        reactCode.append("  );\n");
+        
+     if (useCase.getTemplate().equals("formaSablon")){
+         reactCode.append("      </div>\n");
+         reactCode.append("</form> ); ");
+     } 
+     if (useCase.getTemplate().equals("tableSablon")){
+         reactCode.append("      </div>\n");
+         reactCode.append(("</>);"));
+     }
+     
+        
         reactCode.append("};\n\n");
         reactCode.append("export default ").append(useCase.getName()).append("Component;\n");
 
@@ -300,7 +299,7 @@ reactCode.append(reactTable);
     private static void saveToFile(String fileName, String content) throws IOException {
         Files.write(Paths.get(fileName), content.getBytes());
     }
-
+//zbog ove metode mora da se dodaje toString u entity svaki put
     private static Attribute findAttribute(ScenarioStep step, List<Attribute> attributes) {
        
         for (Attribute attribute : attributes) {

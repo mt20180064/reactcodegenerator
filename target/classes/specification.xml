@@ -8,7 +8,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="1"
-        template="form"
+        template="formaSablon"
     >
 
         <actor name="Sudija"/>
@@ -34,7 +34,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="2"
-        template="form"
+        template="formaSablon"
     >
         <actor name="Sudija"/>
         <entity id="EntityIgrac" name="Igrac">
@@ -69,7 +69,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="3"
-        template="form"
+        template="formaSablon"
     >
         <entity id="EntityTurnir" name="Turnir">
             <attribute id="TurnirID" name="TurnirID" type="NUMBER"  identity="true" validation = "typeBased"/>
@@ -97,7 +97,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="4"
-        template="table"
+        template="tableSablon"
     >
         <actor name="Sudija"/>
         <entity id="EntityTurnir" name="Turnir">
@@ -124,7 +124,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="5"
-        template="table"
+        template="tableSablon"
     >
         <actor name="Sudija"/>
         <entity id="EntityPartija" name="Partija">
@@ -157,7 +157,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="6"
-        template="table"
+        template="tableSablon"
     >
         <actor name="Sudija"/>
         <entity id="EntityIgrac" name="Igrac">
@@ -182,7 +182,7 @@
         precondition="Nema preduslova" 
         postcondition="Nema postuslova"
         order="7"
-        template="display"
+        template="displaySablon"
     >
         <actor name="Sudija"/>
         <entity id="EntityTurnir" name="Turnir">
