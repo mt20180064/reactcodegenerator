@@ -150,11 +150,7 @@ reactCode.append(reactTable);
     
         
        } else if (useCase.getTemplate().equals("formaSablon")){
-          reactCode.append("function validate(formData){\n" +
-" const allContainAtSign = Object.values(formData).every(value => value.includes('@'));\n" +
-" if (allContainAtSign) return true;\n" +
-" else return false;\n" +
-"}\n");
+   
 reactCode.append("const handleSubmit = (e) => {\n" +
 "  e.preventDefault();\n" +
 "  if (validate(formData)) {\n" +
@@ -170,6 +166,7 @@ reactCode.append("const handleSubmit = (e) => {\n" +
        
         reactCode.append("      <div>\n");
         List<Attribute> attributes = useCase.getEntity().getAttribute();
+           addValidations(attributes, reactCode);
         for (ScenarioStep step : useCase.getMainScenario().getStep()){
                 Attribute attribute =findAttribute(step, attributes);
                 if (attribute!=null){
@@ -177,6 +174,8 @@ reactCode.append("const handleSubmit = (e) => {\n" +
                      if (step.getAction().value().equals("ENTRY")){
             reactCode.append("        <div>\n");
             reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
+    
+              
             reactCode.append("          <input type=\"text\" name=\"").append(attribute.getName()).append("\" onChange={handleChange} />\n");
             reactCode.append("        </div>\n");
            
@@ -303,17 +302,81 @@ reactCode.append("const handleSubmit = (e) => {\n" +
     private static Attribute findAttribute(ScenarioStep step, List<Attribute> attributes) {
        
         for (Attribute attribute : attributes) {
-            System.out.println("atribut: "+attribute.getName());
-            System.out.println("iz koraka:"+step.getEntity().toString());
+          //  System.out.println("atribut: "+attribute.getName());
+           // System.out.println("iz koraka:"+step.getEntity().toString());
             if (step.getEntity().toString().equals(attribute.getName())){
-                System.out.println(step.getEntity().toString());
-                System.out.println(attribute.getName());
+              //  System.out.println(step.getEntity().toString());
+              //  System.out.println(attribute.getName());
                 return attribute;
             }
             
         } 
-        System.out.println("nouu");return null;
+        return null;
     }
+
+    private static void insertCodeAfterText(StringBuilder reactCode, String textToInsertAfter, String newCode) {
+       int index = reactCode.indexOf(textToInsertAfter);
+        if (index != -1) {
+            index += textToInsertAfter.length();
+            reactCode.insert(index, newCode);
+        } else {
+            System.out.println("Text not found in the existing code.");
+        }
+    }
+
+    private static void addValidations(List<Attribute> attributes, StringBuilder reactCode) {
+        boolean general = false;
+        boolean specific = false;
+        boolean typeBased = false;
+        for (Attribute attribute : attributes) {
+            if (typeBased==true && general==true && typeBased==true) return;
+            if (attribute.getValidation().value().equals("generalContext") && general==false){
+                String textToInsertAfter = "const handleChange = (e) => {\n" +
+"    setFormData({ ...formData, [e.target.name]: e.target.value });\n" +
+"  };";
+        String newCode = " function validate(formData) {\n" +
+"    let usernameValid = true;\n" +
+"    let passwordValid = true;\n" +
+"  \n" +
+"    if (formData.hasOwnProperty('username')) {\n" +
+"      const username = formData.username;\n" +
+"      usernameValid = /^[a-z]+$/.test(username);\n" +
+"      if (!usernameValid) {\n" +
+"        console.log('Username mora sadrzati samo mala slova.');\n" +
+"      }\n" +
+"    }\n" +
+"  \n" +
+"    if (formData.hasOwnProperty('password')) {\n" +
+"      const password = formData.password;\n" +
+"      passwordValid = /[a-z]/.test(password) && /[A-Z]/.test(password) && /\\d/.test(password);\n" +
+"      if (!passwordValid) {\n" +
+"        console.log('Password mora sadrzati bar jedno malo slovo, jedno veliko slovo i jednu cifru.');\n" +
+"      }\n" +
+"    }\n" +
+"  \n" +
+"    if (usernameValid && passwordValid) {\n" +
+"      console.log('uspesno logovanje');\n" +
+"      return true;\n" +
+"    }\n" +
+"  \n" +
+"    return false;\n" +
+"  }\n";
+
+        insertCodeAfterText(reactCode, textToInsertAfter, newCode);
+          general=true;
+         
+            }
+         if (attribute.getValidation().value().equals("specificContext") && specific==false){
+             System.out.println("uslo u specific Context za atribut: "+attribute);
+             specific=true;
+         }
+         if (attribute.getValidation().value().equals("typeBased") && typeBased==false){
+             System.out.println("uslo u typeBased za atribut: "+attribute);
+             typeBased=true;
+         }
+        }
+    }
+    
 
     
 
