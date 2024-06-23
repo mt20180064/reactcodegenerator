@@ -11,12 +11,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.swing.JTable;
@@ -160,7 +164,12 @@ reactCode.append(reactTable);
        
         reactCode.append("      <div>\n");
         List<Attribute> attributes = useCase.getEntity().getAttribute();
-           addValidations(attributes, reactCode);
+            try {
+                addValidations(attributes, reactCode);
+            } catch (IOException ex) {
+                System.out.println("uslo u catch kod addValidations");
+                ex.printStackTrace();
+            }
         for (ScenarioStep step : useCase.getMainScenario().getStep()){
                 Attribute attribute =findAttribute(step, attributes);
                 if (attribute!=null){
@@ -318,7 +327,7 @@ reactCode.append(reactTable);
         }
     }
     
-    private static void addValidations(List<Attribute> attributes, StringBuilder reactCode) {
+    private static void addValidations(List<Attribute> attributes, StringBuilder reactCode) throws IOException {
         boolean general = false;
         boolean specific = false;
         boolean typeBased = false;
@@ -383,8 +392,40 @@ reactCode.append(reactTable);
                 general=true;
          
             }
+          AttributeProperties ap = new AttributeProperties("src/main/resources/specificContext.properties");
          if (attribute.getValidation().value().equals("specificContext") && specific==false){
              System.out.println("uslo u specific Context za atribut: "+attribute);
+             //ovo se radi na nivou aplikacije. na primer moze da se napravi fajl koji sastavlja klijent sa programerom
+             //u kome se prolazi kroz specifican kontekst za svako od polja koje ce se potencijalno naci kao input
+             if (attribute.getType().value().equalsIgnoreCase("NUMBER")){
+                 Double donjaGranica= ap.getLowerBound(attribute.getName());
+                 Double gornjaGranica = ap.getUpperBound(attribute.getName());
+                 insertCodeBeforeText(reactCode, "return (\n" +
+"    <form onSubmit={handleSubmit}>", "function validateNumericAttribute("+attribute.getName()+"," + donjaGranica+ "," +gornjaGranica+ ") {\n" +
+"  let attributeValid = true;\n" +
+"  if (formData.hasOwnProperty("+attribute.getName()+")) {\n" +
+"    const attributeValue = formData["+attribute.getName()+"];\n" +
+"\n" +
+"    // Proveri da li je vrednost numeri?ka\n" +
+"    if (!isNaN(attributeValue)) {\n" +
+"      const numericValue = parseFloat(attributeValue);\n" +
+"\n" +
+"      // Proveri da li je vrednost unutar granica\n" +
+"      attributeValid = numericValue >= donjaGranica && numericValue <= gornjaGranica;\n" +
+"\n" +
+"      if (!attributeValid) {\n" +
+"        console.log(`${"+attribute.getName()+"} mora biti izme?u ${donjaGranica} i ${gornjaGranica}.`);\n" +
+"      } else {\n" +
+"        return true;\n" +
+"      }\n" +
+"    } else {\n" +
+"      console.log(`${"+attribute.getName()+"} mora biti numeri?ka vrednost.`);\n" +
+"      attributeValid = false;\n" +
+"    }\n" +
+"  }\n" +
+"  return attributeValid;\n" +
+"}\n");
+             }
              specific=true;
          }
          if (attribute.getValidation().value().equals("typeBased") && typeBased==false){

@@ -49,7 +49,7 @@
         <mainScenario>
             <step stepNumber="1" action="ENTRY" entity="name"/>
             <step stepNumber="2" action="ENTRY" entity="surname"/>
-            <step stepNumber="3" action="SELECTION" entity="rejting"/>
+            <step stepNumber="3" action="ENTRY" entity="rejting"/>
             <step stepNumber="4" action="SELECTION" entity="kategorija"/>
             <step stepNumber="5" action="SELECTION" entity="klub">
             </step>

@@ -10,6 +10,7 @@ generated\Include.class
 generated\ObjectFactory.class
 generated\Action.class
 generated\ScenarioStep.class
+AttributeProperties.class
 generated\AttributeType.class
 generated\AlternativeScenario.class
 generated\ValidationType.class
