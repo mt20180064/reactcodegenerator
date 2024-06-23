@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -53,10 +54,7 @@ public class ReactComponentGenerator {
         StringBuilder reactCode = new StringBuilder();
         reactCode.append("import React, { useState } from 'react';\n\n");
         reactCode.append("const ").append(useCase.getName()).append("Component = () => {\n");
-        reactCode.append("  const [formData, setFormData] = useState({});\n\n");
-        reactCode.append("  const handleChange = (e) => {\n");
-        reactCode.append("    setFormData({ ...formData, [e.target.name]: e.target.value });\n");
-        reactCode.append("  };\n\n");
+        
       
        if (useCase.getTemplate().equals("tableSablon")){
            reactCode.append(
@@ -150,15 +148,11 @@ reactCode.append(reactTable);
     
         
        } else if (useCase.getTemplate().equals("formaSablon")){
-   
-reactCode.append("const handleSubmit = (e) => {\n" +
-"  e.preventDefault();\n" +
-"  if (validate(formData)) {\n" +
-"    console.log('Form data submitted:', formData);\n" +
-"  } else {\n" +
-"    console.log('Neispravan unos');\n" +
-"  }\n" +
-"}; \n");
+   reactCode.append("  const [formData, setFormData] = useState({});\n\n");
+        reactCode.append("  const handleChange = (e) => {\n");
+        reactCode.append("    setFormData({ ...formData, [e.target.name]: e.target.value });\n");
+        reactCode.append("  };\n\n");
+
         reactCode.append("  return (\n");
         reactCode.append("    <form onSubmit={handleSubmit}>\n");
 
@@ -323,47 +317,70 @@ reactCode.append("const handleSubmit = (e) => {\n" +
             System.out.println("Text not found in the existing code.");
         }
     }
-
+    
     private static void addValidations(List<Attribute> attributes, StringBuilder reactCode) {
         boolean general = false;
         boolean specific = false;
         boolean typeBased = false;
+        boolean pass = false;
+        boolean user = false;
+        boolean name = false;
+        LinkedList<String> scared = new LinkedList<>();
         for (Attribute attribute : attributes) {
             if (typeBased==true && general==true && typeBased==true) return;
             if (attribute.getValidation().value().equals("generalContext") && general==false){
+                
                 String textToInsertAfter = "const handleChange = (e) => {\n" +
 "    setFormData({ ...formData, [e.target.name]: e.target.value });\n" +
-"  };";
-        String newCode = " function validate(formData) {\n" +
-"    let usernameValid = true;\n" +
-"    let passwordValid = true;\n" +
-"  \n" +
-"    if (formData.hasOwnProperty('username')) {\n" +
+"  };\n";
+                switch (attribute.getName()){
+                    case "username" : String newCodeUsername = "function validateUsername ()\n {"
+                            + "let usernameValid = true;"
+                            + "if (formData.hasOwnProperty('username')) {\n" +
 "      const username = formData.username;\n" +
 "      usernameValid = /^[a-z]+$/.test(username);\n" +
 "      if (!usernameValid) {\n" +
 "        console.log('Username mora sadrzati samo mala slova.');\n" +
-"      }\n" +
+"      } else {return true;}\n" +
 "    }\n" +
-"  \n" +
-"    if (formData.hasOwnProperty('password')) {\n" +
+"  }\n";
+                    insertCodeAfterText(reactCode, textToInsertAfter, newCodeUsername);
+                    user=true;
+                    scared.add("validateUsername()");
+                    break;
+                    case "password" : String newCodePass = "function validatePassword() \n{"
+                            + "let passwordValid = true;"
+                            + " if (formData.hasOwnProperty('password')) {\n" +
 "      const password = formData.password;\n" +
 "      passwordValid = /[a-z]/.test(password) && /[A-Z]/.test(password) && /\\d/.test(password);\n" +
 "      if (!passwordValid) {\n" +
 "        console.log('Password mora sadrzati bar jedno malo slovo, jedno veliko slovo i jednu cifru.');\n" +
-"      }\n" +
+"      }else {return true;};\n" +
 "    }\n" +
-"  \n" +
-"    if (usernameValid && passwordValid) {\n" +
-"      console.log('uspesno logovanje');\n" +
-"      return true;\n" +
-"    }\n" +
-"  \n" +
-"    return false;\n" +
 "  }\n";
-
-        insertCodeAfterText(reactCode, textToInsertAfter, newCode);
-          general=true;
+                  insertCodeAfterText(reactCode, textToInsertAfter, newCodePass);  
+                  pass=true;
+                  scared.add("validatePassword()");
+                  break; 
+                    case "name" : String newCodeName = "function validateName () \n {"
+                            + "let nameValid = true;"
+                            + "if (formData.hasOwnProperty('name')) { \n"
+                            + "const name = formData.name; \n"
+                            + "nameValid = /^[A-Z]/.test(name) && /^[A-Za-z]+$/.test(name);\n"
+                            + "if (!nameValid){\n"
+                            + "console.log('ime nije validno');} \n"
+                            + "else {return true;}\n"
+                            + "}\n"
+                            + "}\n";
+                           insertCodeAfterText(reactCode, textToInsertAfter, newCodeName);
+                           name=true;
+                           scared.add("validateName()");
+                    
+                    default: continue;
+                }
+    
+                if (pass && user && name)
+                general=true;
          
             }
          if (attribute.getValidation().value().equals("specificContext") && specific==false){
@@ -374,11 +391,39 @@ reactCode.append("const handleSubmit = (e) => {\n" +
              System.out.println("uslo u typeBased za atribut: "+attribute);
              typeBased=true;
          }
-        }
+        
     }
-    
+    String submitFunction = "const handleSubmit = (e) => {\n" +
+"  e.preventDefault();\n" +
+"  if (" +formatValidationFunctions(scared)+") {\n" +
+"    console.log('Form data submitted:', formData);\n" +
+"  } else {\n" +
+"    console.log('Neispravan unos');\n" +
+"  }\n" +
+"}; \n";
+        insertCodeBeforeText(reactCode, "return (\n" +
+"    <form onSubmit={handleSubmit}>", submitFunction);
+        
+    }
 
-    
+    private static StringBuilder formatValidationFunctions(LinkedList<String> scared) {
+        StringBuilder formatted = new StringBuilder();
+        if (scared.isEmpty()) formatted.append("true");
+        else{
+        for (String validationFunction : scared) {
+            formatted.append(validationFunction);
+            if (!validationFunction.equalsIgnoreCase(scared.getLast()))
+                    formatted.append("&&"); }
+        } return formatted;
+    }
 
+    private static void insertCodeBeforeText(StringBuilder reactCode, String textToInsertBefore, String newCode) {
+         int index = reactCode.indexOf(textToInsertBefore);
+    if (index != -1) {
+        reactCode.insert(index, newCode);
+    } else {
+        System.out.println("Text not found in the existing code.");
+    }
+    }
    
 }
