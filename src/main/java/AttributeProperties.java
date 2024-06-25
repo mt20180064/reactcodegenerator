@@ -47,19 +47,5 @@ public class AttributeProperties {
                 Arrays.asList(properties.getProperty(key).split(",")) : null;
     }
 
-    public static void main(String[] args) {
-        try {
-            AttributeProperties attributeProperties = new AttributeProperties("attributes.properties");
-
-            // Primeri koriš?enja
-            System.out.println("numericalAttribute1.lowerBound: " + attributeProperties.getLowerBound("numericalAttribute1"));
-            System.out.println("numericalAttribute1.upperBound: " + attributeProperties.getUpperBound("numericalAttribute1"));
-            System.out.println("numericalAttribute1.invalidValues: " + attributeProperties.getInvalidValues("numericalAttribute1"));
-
-            System.out.println("textualAttribute1.allowedValues: " + attributeProperties.getAllowedValues("textualAttribute1"));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+ 
 }

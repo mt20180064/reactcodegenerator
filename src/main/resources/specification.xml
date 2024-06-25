@@ -50,7 +50,7 @@
             <step stepNumber="1" action="ENTRY" entity="name"/>
             <step stepNumber="2" action="ENTRY" entity="surname"/>
             <step stepNumber="3" action="ENTRY" entity="rejting"/>
-            <step stepNumber="4" action="SELECTION" entity="kategorija"/>
+            <step stepNumber="4" action="ENTRY" entity="kategorija"/>
             <step stepNumber="5" action="SELECTION" entity="klub">
             </step>
             <step stepNumber="6" action="REQUEST_OPERATION" entity="EntityIgrac"/>
@@ -82,8 +82,8 @@
         <mainScenario>
             <step stepNumber="1" action="ENTRY" entity="naziv"/>
             <step stepNumber="2" action="ENTRY" entity="mesto"/>
-            <step stepNumber="3" action="SELECTION" entity="tip"/>
-            <step stepNumber="4" action="SELECTION" entity="tempo"/>
+            <step stepNumber="3" action="ENTRY" entity="tip"/>
+            <step stepNumber="4" action="ENTRY" entity="tempo"/>
             <step stepNumber="5" action="REQUEST_OPERATION" entity="EntityTurnir"/>
             <step stepNumber="6" action="SYSTEM_ACTION" entity="EntityTurnir"/>
             <step stepNumber="7" action="OPERATION_REPORT" entity="EntityTurnir"/>

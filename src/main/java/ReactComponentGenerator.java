@@ -334,7 +334,12 @@ reactCode.append(reactTable);
         boolean pass = false;
         boolean user = false;
         boolean name = false;
+        boolean once = false;
+        boolean onceSpecific = false;
+        int counter = -1;
         LinkedList<String> scared = new LinkedList<>();
+        LinkedList<String> numericValues = new LinkedList<>();
+        LinkedList<String> textValues = new LinkedList<>();
         for (Attribute attribute : attributes) {
             if (typeBased==true && general==true && typeBased==true) return;
             if (attribute.getValidation().value().equals("generalContext") && general==false){
@@ -390,61 +395,82 @@ reactCode.append(reactTable);
     
                 if (pass && user && name)
                 general=true;
-         
+            
             }
           AttributeProperties ap = new AttributeProperties("src/main/resources/specificContext.properties");
-         if (attribute.getValidation().value().equals("specificContext") && specific==false){
+         if (attribute.getValidation().value().equals("specificContext") ){
+           
              System.out.println("uslo u specific Context za atribut: "+attribute);
+             
+            
+             
              //ovo se radi na nivou aplikacije. na primer moze da se napravi fajl koji sastavlja klijent sa programerom
              //u kome se prolazi kroz specifican kontekst za svako od polja koje ce se potencijalno naci kao input
              if (attribute.getType().value().equalsIgnoreCase("NUMBER")){
-                 Double donjaGranica= ap.getLowerBound(attribute.getName());
-                 Double gornjaGranica = ap.getUpperBound(attribute.getName());
-                 insertCodeBeforeText(reactCode, "return (\n" +
-"    <form onSubmit={handleSubmit}>", "function validateNumericAttribute("+attribute.getName()+"," + donjaGranica+ "," +gornjaGranica+ ") {\n" +
+                  if (!once)
+             { 
+             insertCodeBeforeText(reactCode, "return (\n" +
+"    <form onSubmit={handleSubmit}>", "function validateNumericAttribute(attributeName, attributeValue, donjaGranica, gornjaGranica ) {\n" +
 "  let attributeValid = true;\n" +
-"  if (formData.hasOwnProperty("+attribute.getName()+")) {\n" +
-"    const attributeValue = formData["+attribute.getName()+"];\n" +
+"  if (formData.hasOwnProperty(attributeName)) {\n" +
 "\n" +
-"    // Proveri da li je vrednost numeri?ka\n" +
 "    if (!isNaN(attributeValue)) {\n" +
 "      const numericValue = parseFloat(attributeValue);\n" +
 "\n" +
-"      // Proveri da li je vrednost unutar granica\n" +
 "      attributeValid = numericValue >= donjaGranica && numericValue <= gornjaGranica;\n" +
 "\n" +
 "      if (!attributeValid) {\n" +
-"        console.log(`${"+attribute.getName()+"} mora biti izme?u ${donjaGranica} i ${gornjaGranica}.`);\n" +
+"        console.log(`${attributeName} mora biti izmedju ${donjaGranica} i ${gornjaGranica}.`);\n" +
 "      } else {\n" +
 "        return true;\n" +
 "      }\n" +
 "    } else {\n" +
-"      console.log(`${"+attribute.getName()+"} mora biti numeri?ka vrednost.`);\n" +
+"      console.log(`${attributeName} mora biti numericka vrednost.`);\n" +
 "      attributeValid = false;\n" +
 "    }\n" +
 "  }\n" +
 "  return attributeValid;\n" +
-"}\n");
+"};\n");
+             once=true;}
+                 numericValues.add(attribute.getName());
+                 counter++;
              }
-             specific=true;
+             if (attribute.getType().value().equalsIgnoreCase("STRING")){
+                  if (!onceSpecific)
+             { 
+             insertCodeBeforeText(reactCode, "return (\n" +
+"    <form onSubmit={handleSubmit}>", "function validateTextFinalValues(textInput, allowedValues) {\n" +
+"    if (!allowedValues.includes(textInput)) {\n" +
+"        console.log(\"nedozvoljena vrednost unosa\");\n" +
+"    } else return true;\n" +
+"};");
+             onceSpecific=true;}
+                 textValues.add(attribute.getName());
+                 counter++;
+             }
+             //OVO JE POKUSAJ DA SE VISE PUTA PRIMENJUJE SVE DA BI SVE STO TREBA BILO U SUBMIT FUNKCIJI ZA SPECIFIC CONTEXT
+             //SMISLICU BOLJI NACIN
+            // if (counter==textValues.size()+numericValues.size())
+             //specific=true;
+                
          }
          if (attribute.getValidation().value().equals("typeBased") && typeBased==false){
              System.out.println("uslo u typeBased za atribut: "+attribute);
              typeBased=true;
          }
+           
         
     }
-    String submitFunction = "const handleSubmit = (e) => {\n" +
+        String submitFunction = "const handleSubmit = (e) => {\n" +
 "  e.preventDefault();\n" +
-"  if (" +formatValidationFunctions(scared)+") {\n" +
+"  if (" +formatValidationNumeric(numericValues)+ "&&" + formatValidationText(textValues)+ "&&" +formatValidationFunctions(scared)+") {\n" +
 "    console.log('Form data submitted:', formData);\n" +
 "  } else {\n" +
 "    console.log('Neispravan unos');\n" +
 "  }\n" +
 "}; \n";
-        insertCodeBeforeText(reactCode, "return (\n" +
+                insertCodeBeforeText(reactCode, "return (\n" +
 "    <form onSubmit={handleSubmit}>", submitFunction);
-        
     }
 
     private static StringBuilder formatValidationFunctions(LinkedList<String> scared) {
@@ -454,6 +480,31 @@ reactCode.append(reactTable);
         for (String validationFunction : scared) {
             formatted.append(validationFunction);
             if (!validationFunction.equalsIgnoreCase(scared.getLast()))
+                    formatted.append("&&"); }
+        } return formatted;
+    }
+      private static StringBuilder formatValidationNumeric(LinkedList<String> numericAttributes) throws IOException {
+        StringBuilder formatted = new StringBuilder();
+        AttributeProperties ap = new AttributeProperties("src/main/resources/specificContext.properties");
+        if (numericAttributes.isEmpty()) formatted.append("true");
+        else{
+        for (String numa : numericAttributes) {
+            Double donjaGranica= ap.getLowerBound(numa);
+                 Double gornjaGranica = ap.getUpperBound(numa);
+            formatted.append("validateNumericAttribute(").append("'").append(numa).append("'").append(",").append("formData.").append(numa).append(",").append(String.valueOf(donjaGranica)).append(",").append(String.valueOf(gornjaGranica)).append(") ");
+            if (!numa.equalsIgnoreCase(numericAttributes.getLast()))
+                    formatted.append("&&"); }
+        } return formatted;
+    }
+      
+        private static StringBuilder formatValidationText(LinkedList<String> textAttributes) throws IOException {
+        StringBuilder formatted = new StringBuilder();
+         AttributeProperties ap = new AttributeProperties("src/main/resources/specificContext.properties");
+        if (textAttributes.isEmpty()) formatted.append("true");
+        else{
+        for (String attName : textAttributes) {
+            formatted.append("validateTextFinalValues(").append("formData.").append(attName).append(",").append(ap.getAllowedValues(attName)).append(")");
+            if (!attName.equalsIgnoreCase(textAttributes.getLast()))
                     formatted.append("&&"); }
         } return formatted;
     }
