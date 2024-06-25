@@ -444,14 +444,21 @@ reactCode.append(reactTable);
 "        console.log(\"nedozvoljena vrednost unosa\");\n" +
 "    } else return true;\n" +
 "};");
+             insertCodeBeforeText(reactCode, "return (\n" +
+"    <form onSubmit={handleSubmit}>", "function validateTextContainingValues(textInput, allowedValues) {\n" +
+"    for (let value of allowedValues) {\n" +
+"        if (textInput.includes(value)) {\n" +
+"            return true;\n" +
+"        }\n" +
+"    }\n" +
+"    console.log(\"nedozvoljena vrednost unosa\");\n" +
+"    return false;\n" +
+"}");
              onceSpecific=true;}
                  textValues.add(attribute.getName());
                  counter++;
              }
-             //OVO JE POKUSAJ DA SE VISE PUTA PRIMENJUJE SVE DA BI SVE STO TREBA BILO U SUBMIT FUNKCIJI ZA SPECIFIC CONTEXT
-             //SMISLICU BOLJI NACIN
-            // if (counter==textValues.size()+numericValues.size())
-             //specific=true;
+            
                 
          }
          if (attribute.getValidation().value().equals("typeBased") && typeBased==false){
@@ -503,9 +510,16 @@ reactCode.append(reactTable);
         if (textAttributes.isEmpty()) formatted.append("true");
         else{
         for (String attName : textAttributes) {
+            if (ap.getAllowedValues(attName)!=null){
             formatted.append("validateTextFinalValues(").append("formData.").append(attName).append(",").append(ap.getAllowedValues(attName)).append(")");
             if (!attName.equalsIgnoreCase(textAttributes.getLast()))
-                    formatted.append("&&"); }
+                    formatted.append("&&");
+            } else {
+                formatted.append("validateTextContainingValues(").append("formData.").append(attName).append(",").append(ap.getContainingValues(attName)).append(")");
+                if (!attName.equalsIgnoreCase(textAttributes.getLast()))
+                    formatted.append("&&");
+            }
+        }
         } return formatted;
     }
 

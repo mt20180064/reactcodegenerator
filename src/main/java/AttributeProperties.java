@@ -47,5 +47,8 @@ public class AttributeProperties {
                 Arrays.asList(properties.getProperty(key).split(",")) : null;
     }
 
- 
+ public List<String> getContainingValues (String attributeName){
+     String key = attributeName+".contains";
+     return properties.containsKey(key) ? Arrays.asList(properties.getProperty(key).split(",")) : null;
+ }
 }
