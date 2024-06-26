@@ -189,7 +189,7 @@ reactCode.append(reactTable);
 "        <option value=\"\" disabled selected>").append(attribute.getName()).append("</option></select>\n");
             reactCode.append("        </div>\n");
                      }
-                     }
+                     } //videti da li da uvek jedno dugme bude submit ili da moze da ih ima vise
                if (step.getAction().value().equals("REQUEST_OPERATION")){
                     reactCode.append("      <button  type=\"submit\" style={{ \n" +
 "      border: '1px solid black', \n" +
@@ -305,11 +305,7 @@ reactCode.append(reactTable);
     private static Attribute findAttribute(ScenarioStep step, List<Attribute> attributes) {
        
         for (Attribute attribute : attributes) {
-          //  System.out.println("atribut: "+attribute.getName());
-           // System.out.println("iz koraka:"+step.getEntity().toString());
             if (step.getEntity().toString().equals(attribute.getName())){
-              //  System.out.println(step.getEntity().toString());
-              //  System.out.println(attribute.getName());
                 return attribute;
             }
             
@@ -329,14 +325,15 @@ reactCode.append(reactTable);
     
     private static void addValidations(List<Attribute> attributes, StringBuilder reactCode) throws IOException {
         boolean general = false;
-        boolean specific = false;
         boolean typeBased = false;
         boolean pass = false;
         boolean user = false;
         boolean name = false;
+        boolean surname=false;
         boolean once = false;
         boolean onceSpecific = false;
-        int counter = -1;
+       
+        
         LinkedList<String> scared = new LinkedList<>();
         LinkedList<String> numericValues = new LinkedList<>();
         LinkedList<String> textValues = new LinkedList<>();
@@ -389,11 +386,25 @@ reactCode.append(reactTable);
                            insertCodeAfterText(reactCode, textToInsertAfter, newCodeName);
                            name=true;
                            scared.add("validateName()");
-                    
+                           break;
+                    case "surname" :  String newCodeSurname = "function validateSurname () \n {"
+                            + "let surnameValid = true;"
+                            + "if (formData.hasOwnProperty('surname')) { \n"
+                            + "const surname = formData.surname; \n"
+                            + "surnameValid = /^[A-Z]/.test(surname) && /^[A-Za-z]+$/.test(surname);\n"
+                            + "if (!surnameValid){\n"
+                            + "console.log('prezime nije validno');} \n"
+                            + "else {return true;}\n"
+                            + "}\n"
+                            + "}\n";
+                        insertCodeAfterText(reactCode, textToInsertAfter, newCodeSurname);
+                        surname=true;
+                       scared.add("validateSurname()");
+                       break;
                     default: continue;
                 }
-    
-                if (pass && user && name)
+    //proveriti da li postoji bolji nacin za ovo i da li radi u svim slucajevima. za sada da, samo nisam 100% sigurna zasto
+                if (pass && user && name && surname )
                 general=true;
             
             }
@@ -404,8 +415,7 @@ reactCode.append(reactTable);
              
             
              
-             //ovo se radi na nivou aplikacije. na primer moze da se napravi fajl koji sastavlja klijent sa programerom
-             //u kome se prolazi kroz specifican kontekst za svako od polja koje ce se potencijalno naci kao input
+             //ovo se radi na nivou aplikacije. pravi se fajl za koji je kljucna faza prikupljanja zahteva. specificContext.properties
              if (attribute.getType().value().equalsIgnoreCase("NUMBER")){
                   if (!once)
              { 
@@ -433,7 +443,7 @@ reactCode.append(reactTable);
 "};\n");
              once=true;}
                  numericValues.add(attribute.getName());
-                 counter++;
+               
              }
              if (attribute.getType().value().equalsIgnoreCase("STRING")){
                   if (!onceSpecific)
@@ -456,7 +466,7 @@ reactCode.append(reactTable);
 "}");
              onceSpecific=true;}
                  textValues.add(attribute.getName());
-                 counter++;
+                 
              }
             
                 
