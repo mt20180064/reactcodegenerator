@@ -1,34 +1,35 @@
 import React, { useState } from 'react';
 
 const PlasmanComponent = () => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const tableStyle = {
+    borderCollapse: 'collapse', 
+    width: '70%'
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form data submitted:', formData);
+const cellStyle = {
+    border: '1px solid black',
+    padding: '8px'
   };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Plasman</h2>
+<>      <h2>Plasman</h2>
       <div>
-        <table>
+        <table style={tableStyle}>
             <thead>
                 <tr>
-                    <th>IgracID</th>
-<th>rang</th>
-<th>ime</th>
-<th>prezime</th>
-<th>poeni</th>
+                    <th style={cellStyle}>IgracID</th>
+<th style={cellStyle}>rang</th>
+<th style={cellStyle}>ime</th>
+<th style={cellStyle}>prezime</th>
+<th style={cellStyle}>poeni</th>
                 </tr>
             </thead>
             <tbody>
                     <tr>
-                        <td>1</td> <td>2</td><td>1</td><td>1</td>                    </tr>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+                        </tr>
             </tbody>
         </table>
 
@@ -40,8 +41,6 @@ const PlasmanComponent = () => {
       padding: '10px'
     }}>Plasman</button>
       </div>
-    </form>
-  );
-};
+</>);};
 
 export default PlasmanComponent;

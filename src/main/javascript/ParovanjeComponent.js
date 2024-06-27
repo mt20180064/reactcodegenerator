@@ -1,35 +1,37 @@
 import React, { useState } from 'react';
 
 const ParovanjeComponent = () => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const tableStyle = {
+    borderCollapse: 'collapse', 
+    width: '70%'
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form data submitted:', formData);
+const cellStyle = {
+    border: '1px solid black',
+    padding: '8px'
   };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Parovanje</h2>
+<>      <h2>Parovanje</h2>
       <div>
-        <table>
+        <table style={tableStyle}>
             <thead>
                 <tr>
-                    <th>PartijaID</th>
-<th>tabla</th>
-<th>beli</th>
-<th>crni</th>
-<th>bodovibeli</th>
-<th>bodovicrni</th>
+                    <th style={cellStyle}>PartijaID</th>
+<th style={cellStyle}>tabla</th>
+<th style={cellStyle}>beli</th>
+<th style={cellStyle}>crni</th>
+<th style={cellStyle}>bodovibeli</th>
+<th style={cellStyle}>bodovicrni</th>
                 </tr>
             </thead>
             <tbody>
                     <tr>
-                        <td>1</td> <td>2</td><td>1</td><td>1</td>                    </tr>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+                        </tr>
             </tbody>
         </table>
 
@@ -55,8 +57,6 @@ const ParovanjeComponent = () => {
       padding: '10px'
     }}>Parovanje</button>
       </div>
-    </form>
-  );
-};
+</>);};
 
 export default ParovanjeComponent;

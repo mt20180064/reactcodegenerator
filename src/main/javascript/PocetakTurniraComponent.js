@@ -1,34 +1,51 @@
 import React, { useState } from 'react';
 
 const PocetakTurniraComponent = () => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const tableStyle = {
+    borderCollapse: 'collapse', 
+    width: '70%'
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form data submitted:', formData);
+const cellStyle = {
+    border: '1px solid black',
+    padding: '8px'
   };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>PocetakTurnira</h2>
+<>      <h2>PocetakTurnira</h2>
       <div>
-        <table>
+<select>
+          <option value="option1">Kriterijum 1</option>
+          <option value="option2">Kriterijum 2</option>
+          <option value="option3">Kriterijum 3</option>
+        </select>
+        <input type="text" placeholder="Unesite vrednost kriterijuma" />
+        <button 
+          type="submit" 
+          style={{ 
+            border: '1px solid black', 
+            borderRadius: '0px', 
+            backgroundColor: 'lightgray' 
+          }}
+        >
+          Pretraga
+        </button>
+         <table style={tableStyle}>
             <thead>
                 <tr>
-                    <th>TurnirID</th>
-<th>naziv</th>
-<th>mesto</th>
-<th>tip</th>
-<th>tempo</th>
+                    <th style={cellStyle}>TurnirID</th>
+<th style={cellStyle}>naziv</th>
+<th style={cellStyle}>mesto</th>
+<th style={cellStyle}>tip</th>
+<th style={cellStyle}>tempo</th>
                 </tr>
             </thead>
             <tbody>
                     <tr>
-                        <td>1</td> <td>2</td><td>1</td><td>1</td>                    </tr>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+<td style={cellStyle}>upisi vrednost</td>
+                        </tr>
             </tbody>
         </table>
 
@@ -40,8 +57,6 @@ const PocetakTurniraComponent = () => {
       padding: '10px'
     }}>PocetakTurnira</button>
       </div>
-    </form>
-  );
-};
+</>);};
 
 export default PocetakTurniraComponent;

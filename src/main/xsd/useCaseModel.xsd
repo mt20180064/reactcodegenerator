@@ -22,6 +22,7 @@
         <xs:attribute name="postcondition" type="xs:string"/>
         <xs:attribute name="order" type="xs:int" use="required"/>
         <xs:attribute name="template" type="xs:string" use="required"/>
+        <!--fokus je na validaciji tako da se radi sa template-om formaSablon pa se istrazivacki deo bavi time kako prepoznati da je useCase bas za taj sablon-->
     </xs:complexType>
 	
     <xs:complexType name="actor">
@@ -48,7 +49,7 @@
                 <xs:attribute name="type" type="attributeType" default="STRING" use="optional"/>
                 <xs:attribute name="identity" type="xs:boolean" default="false" use="optional"/>
                 <xs:attribute name="required" type="xs:boolean" default="true" use="optional"/>
-                <!--ovo je sada deo koji dodajem za validaciju, ne znam da li ce uspeti-->
+                <!--definise se novi element kod atributa koji je kompleksnog tipa i odnosi se na validaciju-->
                 <xs:attribute name="validation" type="validationType" default ="typeBased" use = "optional"/>
             </xs:extension>
         </xs:complexContent>
@@ -75,11 +76,11 @@
             <xs:enumeration value="OPERATION_REPORT"/>
         </xs:restriction>
     </xs:simpleType>
-    <!--ovo je sada deo koji dodajem za validaciju, ne znam da li ce uspeti-->
+    <!--prethodno definisani kompleksni tip validation. verovatno ce dobiti jos neke elemente ako zatreba -->
     <xs:complexType name="validation">
              <xs:attribute name="validationType" type="validationType" default="typeBased" use="optional"/>
     </xs:complexType>
-    
+    <!-- jednostsavan tip validationType koji pokazuje koja ce se validacija koristiti-->
     <xs:simpleType name="validationType">
         <xs:restriction base="xs:string">
             <xs:enumeration value="typeBased"/>

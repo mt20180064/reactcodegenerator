@@ -1,48 +1,126 @@
 import React, { useState } from 'react';
 
 const PregledZavrsenogTurniraComponent = () => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form data submitted:', formData);
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>PregledZavrsenogTurnira</h2>
+<>      <h2>PregledZavrsenogTurnira</h2>
       <div>
         <div>
-          <label>TurnirID</label>
-          <label>TurnirID</label>
-        </div>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px' 
+    }} >TurnirID: </label>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px', 
+width: '20px'
+    }} >TurnirID</label>
+        <br></br>
+        <br></br>
+</div>
         <div>
-          <label>sudija</label>
-          <label>sudija</label>
-        </div>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px' 
+    }} >sudija: </label>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px', 
+width: '20px'
+    }} >sudija</label>
+        <br></br>
+        <br></br>
+</div>
         <div>
-          <label>status</label>
-          <label>status</label>
-        </div>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px' 
+    }} >status: </label>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px', 
+width: '20px'
+    }} >status</label>
+        <br></br>
+        <br></br>
+</div>
         <div>
-          <label>prvi</label>
-          <label>prvi</label>
-        </div>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px' 
+    }} >prvi: </label>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px', 
+width: '20px'
+    }} >prvi</label>
+        <br></br>
+        <br></br>
+</div>
         <div>
-          <label>drugi</label>
-          <label>drugi</label>
-        </div>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px' 
+    }} >drugi: </label>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px', 
+width: '20px'
+    }} >drugi</label>
+        <br></br>
+        <br></br>
+</div>
         <div>
-          <label>treci</label>
-          <label>treci</label>
-        </div>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px' 
+    }} >treci: </label>
+          <label style={{ 
+      border: '1px solid black', 
+ display: 'inline-blocks', 
+      borderRadius: '1px', 
+      margin: '25px', 
+      padding: '3px', 
+width: '20px'
+    }} >treci</label>
+        <br></br>
+        <br></br>
+</div>
       </div>
-    </form>
-  );
+</>
+);
 };
 
 export default PregledZavrsenogTurniraComponent;
