@@ -330,11 +330,13 @@ reactCode.append(reactTable);
         boolean user = false;
         boolean name = false;
         boolean surname=false;
+        boolean phone = false;
+        boolean email =false;
         boolean once = false;
         boolean onceSpecific = false;
        
         
-        LinkedList<String> scared = new LinkedList<>();
+        LinkedList<String> listOfAttNames = new LinkedList<>();
         LinkedList<String> numericValues = new LinkedList<>();
         LinkedList<String> textValues = new LinkedList<>();
         for (Attribute attribute : attributes) {
@@ -357,7 +359,7 @@ reactCode.append(reactTable);
 "  }\n";
                     insertCodeAfterText(reactCode, textToInsertAfter, newCodeUsername);
                     user=true;
-                    scared.add("validateUsername()");
+                    listOfAttNames.add("validateUsername()");
                     break;
                     case "password" : String newCodePass = "function validatePassword() \n{"
                             + "let passwordValid = true;"
@@ -371,7 +373,7 @@ reactCode.append(reactTable);
 "  }\n";
                   insertCodeAfterText(reactCode, textToInsertAfter, newCodePass);  
                   pass=true;
-                  scared.add("validatePassword()");
+                  listOfAttNames.add("validatePassword()");
                   break; 
                     case "name" : String newCodeName = "function validateName () \n {"
                             + "let nameValid = true;"
@@ -385,7 +387,7 @@ reactCode.append(reactTable);
                             + "}\n";
                            insertCodeAfterText(reactCode, textToInsertAfter, newCodeName);
                            name=true;
-                           scared.add("validateName()");
+                           listOfAttNames.add("validateName()");
                            break;
                     case "surname" :  String newCodeSurname = "function validateSurname () \n {"
                             + "let surnameValid = true;"
@@ -399,12 +401,44 @@ reactCode.append(reactTable);
                             + "}\n";
                         insertCodeAfterText(reactCode, textToInsertAfter, newCodeSurname);
                         surname=true;
-                       scared.add("validateSurname()");
+                       listOfAttNames.add("validateSurname()");
                        break;
+                    case "phoneNumber" : String newCodePhoneNumber = "function validatePhoneNumber() {\n" +
+"    let phoneNumberValid = true;\n" +
+"    if (formData.hasOwnProperty('phoneNumber')) {\n" +
+"        const phoneNumber = formData.phoneNumber;\n" +
+"        phoneNumberValid = /^\\+?\\d+$/.test(phoneNumber);\n" +
+"        if (!phoneNumberValid) {\n" +
+"            console.log('Broj telefona nije validan');\n" +
+"        } else {\n" +
+"            return true;\n" +
+"        }\n" +
+"    }\n" +
+"}\n";
+                        insertCodeAfterText(reactCode, textToInsertAfter, newCodePhoneNumber);
+                        phone=true;
+                        listOfAttNames.add("validatePhoneNumber()");
+                    break;
+                    case "email": String newCodeEmail = "function validateEmail() {\n" +
+"    let emailValid = true;\n" +
+"    if (formData.hasOwnProperty('email')) {\n" +
+"        const email = formData.email;\n" +
+"        emailValid = /^[A-Za-z0-9._%+-]+@[A-Za-z]+\\.[A-Za-z]{2,}$/.test(email);\n" +
+"        if (!emailValid) {\n" +
+"            console.log('Email adresa nije validna');\n" +
+"        } else {\n" +
+"            return true;\n" +
+"        }\n" +
+"    }\n" +
+"}\n";
+                        insertCodeAfterText(reactCode, textToInsertAfter, newCodeEmail);
+                        email=true;
+                        listOfAttNames.add("validateEmail()");
+                        break;
                     default: continue;
                 }
     //proveriti da li postoji bolji nacin za ovo i da li radi u svim slucajevima. za sada da, samo nisam 100% sigurna zasto
-                if (pass && user && name && surname )
+                if (pass && user && name && surname && phone && email )
                 general=true;
             
             }
@@ -478,9 +512,10 @@ reactCode.append(reactTable);
            
         
     }
+        //OVO JE ZA POSLE U VALIDACIJI NAKON SVIH TIPOVA DA SE NALASI DA SE PROVERI
         String submitFunction = "const handleSubmit = (e) => {\n" +
 "  e.preventDefault();\n" +
-"  if (" +formatValidationNumeric(numericValues)+ "&&" + formatValidationText(textValues)+ "&&" +formatValidationFunctions(scared)+") {\n" +
+"  if (" +formatValidationNumeric(numericValues)+ "&&" + formatValidationText(textValues)+ "&&" +formatValidationFunctions(listOfAttNames)+") {\n" +
 "    console.log('Form data submitted:', formData);\n" +
 "  } else {\n" +
 "    console.log('Neispravan unos');\n" +
