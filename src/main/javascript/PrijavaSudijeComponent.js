@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 
 const PrijavaSudijeComponent = () => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-function validatePassword() 
+  const handleSubmit = (e) => {
+  e.preventDefault();
+  if (true&&true&&validateUsername()&&validatePassword()) {
+    console.log('Form data submitted:', formData);
+  } else {
+    console.log('Neispravan unos');
+  }
+}; 
+const [formData, setFormData] = useState({});function validatePassword() 
 {let passwordValid = true; if (formData.hasOwnProperty('password')) {
       const password = formData.password;
       passwordValid = /[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password);
@@ -25,34 +28,31 @@ function validateUsername ()
     }
   }
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  if (true&&true&&validateUsername()&&validatePassword()) {
-    console.log('Form data submitted:', formData);
-  } else {
-    console.log('Neispravan unos');
-  }
-}; 
-return (
-    <form onSubmit={handleSubmit}>
-      <h2>PrijavaSudije</h2>
-      <div>
-        <div>
-          <label>username</label>
-          <input type="text" name="username" onChange={handleChange} />
-        </div>
-        <div>
-          <label>password</label>
-          <input type="text" name="password" onChange={handleChange} />
-        </div>
-      <button  type="submit" style={{ 
-      border: '1px solid black', 
-      borderRadius: '0px', 
-      backgroundColor: 'lightgray', 
-      margin: '5px', 
-      padding: '10px'
+
+  const handleChange = (e) => {
+	setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  return (
+	<form onSubmit={handleSubmit}>
+  	<h2>PrijavaSudije</h2>
+  	<div>
+    	<div>
+      	<label>username</label>
+      	<input type="text" name="username" onChange={handleChange} />
+    	</div>
+    	<div>
+      	<label>password</label>
+      	<input type="text" name="password" onChange={handleChange} />
+    	</div>
+  	<button  type="submit" style={{ 
+  	border: '1px solid black', 
+  	borderRadius: '0px', 
+  	backgroundColor: 'lightgray', 
+  	margin: '5px', 
+  	padding: '10px'
     }}>PrijavaSudije</button>
-      </div>
+  	</div>
 </form> ); };
 
 export default PrijavaSudijeComponent;

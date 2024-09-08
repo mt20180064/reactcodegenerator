@@ -56,7 +56,7 @@ const cellStyle = {
       margin: '5px', 
       padding: '10px'
     }}>PocetakTurnira</button>
-      </div>
+  	</div>
 </>);};
 
 export default PocetakTurniraComponent;

@@ -30,12 +30,11 @@ import javax.swing.table.DefaultTableModel;
 
 public class ReactComponentGenerator {
 
-    public static void main(String[] args) {
-        try {
-           
-            JAXBContext jaxbContext = JAXBContext.newInstance(Specification.class);
-            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-            Specification specification = (Specification) unmarshaller.unmarshal(new File("src/main/resources/specification.xml"));
+	public static void main(String[] args) { 
+    	try {
+        	JAXBContext jaxbContext = JAXBContext.newInstance(Specification.class); 
+        	Unmarshaller unmarshaller = jaxbContext.createUnmarshaller(); 
+        	Specification specification = (Specification) unmarshaller.unmarshal(new File("src/main/resources/specification.xml"));
 
             List<String> componentNames = new ArrayList<>();
 
@@ -46,21 +45,22 @@ public class ReactComponentGenerator {
                 saveToFile("src/main/javascript/" + componentName + ".js", reactCode);
             }
 
-            String appJsCode = generateAppJs(componentNames);
-            saveToFile("src/main/javascript/App.js", appJsCode);
+            	String appJsCode = generateAppJs(componentNames); 
+        	saveToFile("src/main/javascript/App.js", appJsCode); 
+    	} catch (JAXBException | IOException e) { 
+        	e.printStackTrace(); 
+    	} 
+	} 
 
-        } catch (JAXBException | IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private static String generateUseCaseComponent(UseCase useCase) {
-        StringBuilder reactCode = new StringBuilder();
-        reactCode.append("import React, { useState } from 'react';\n\n");
-        reactCode.append("const ").append(useCase.getName()).append("Component = () => {\n");
+    private static String generateUseCaseComponent(UseCase useCase) { 
+    	StringBuilder reactCode = new StringBuilder(); 
+    	reactCode.append("import React, { useState } from 'react';\n\n"); 
+    	reactCode.append("const ").append(useCase.getName()).append("Component = () => {\n"); 
+
         
       
-       if (useCase.getTemplate().equals("tableSablon")){
+       if (useCase.getMode().equals("tableMode")){
            reactCode.append(
 "  const tableStyle = {\n" +
 "    borderCollapse: 'collapse', \n" +
@@ -151,59 +151,65 @@ reactCode.append(reactTable);
            }
     
         
-       } else if (useCase.getTemplate().equals("formaSablon")){
-   reactCode.append("  const [formData, setFormData] = useState({});\n\n");
-        reactCode.append("  const handleChange = (e) => {\n");
-        reactCode.append("    setFormData({ ...formData, [e.target.name]: e.target.value });\n");
-        reactCode.append("  };\n\n");
+       } else if (useCase.getMode().equals("formMode")){ 
+   reactCode.append("  const [formData, setFormData] = useState({});\n\n"); 
+    	reactCode.append("  const handleChange = (e) => {\n"); 
+    	reactCode.append("	setFormData({ ...formData, [e.target.name]: e.target.value });\n"); 
+    	reactCode.append("  };\n\n");
 
-        reactCode.append("  return (\n");
-        reactCode.append("    <form onSubmit={handleSubmit}>\n");
-
-        reactCode.append("      <h2>").append(useCase.getName()).append("</h2>\n");
-       
-        reactCode.append("      <div>\n");
+        reactCode.append("  return (\n"); 
+    	reactCode.append("	<form onSubmit={handleSubmit}>\n");
+    	reactCode.append("  	<h2>").append(useCase.getName()).append("</h2>\n");
+    	reactCode.append("  	<div>\n"); 
         List<Attribute> attributes = useCase.getEntity().getAttribute();
-            try {
-                addValidations(attributes, reactCode);
-            } catch (IOException ex) {
-                System.out.println("uslo u catch kod addValidations");
-                ex.printStackTrace();
-            }
-        for (ScenarioStep step : useCase.getMainScenario().getStep()){
-                Attribute attribute =findAttribute(step, attributes);
-                if (attribute!=null){
-                    
-                     if (step.getAction().value().equals("ENTRY")){
-            reactCode.append("        <div>\n");
-            reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
-    
-              
-            reactCode.append("          <input type=\"text\" name=\"").append(attribute.getName()).append("\" onChange={handleChange} />\n");
-            reactCode.append("        </div>\n");
-           
-                     } else if (step.getAction().value().equals("SELECTION")){
-                          reactCode.append("        <div>\n");
-            reactCode.append("          <label>").append(attribute.getName()).append("</label>\n");
-            reactCode.append("          <select name=\"\" class=\"\">\n" +
-"        <option value=\"\" disabled selected>").append(attribute.getName()).append("</option></select>\n");
-            reactCode.append("        </div>\n");
-                     }
-                     } //videti da li da uvek jedno dugme bude submit ili da moze da ih ima vise
-               if (step.getAction().value().equals("REQUEST_OPERATION")){
-                    reactCode.append("      <button  type=\"submit\" style={{ \n" +
-"      border: '1px solid black', \n" +
-"      borderRadius: '0px', \n" +
-"      backgroundColor: 'lightgray', \n" +
-"      margin: '5px', \n" +
-"      padding: '10px'\n"+
-"    }}>").append(useCase.getName()).append("</button>\n");
-                    
-                } 
-        
-        
-        } 
-    } else if (useCase.getTemplate().equals("displaySablon")){
+try {
+  addValidations(attributes, reactCode);
+} catch (IOException ex) {
+  System.out.println("uslo u catch kod addValidations");
+  ex.printStackTrace();}
+
+        for (ScenarioStep step : useCase.getMainScenario().getStep()) {
+  Attribute attribute = findAttribute(step, attributes);
+  if (attribute != null) {
+    if (step.getAction().value().equals("ENTRY")) {
+      reactCode.append("    	<div>\n");
+      reactCode.append("      	<label>")
+          .append(attribute.getName())
+          .append("</label>\n");
+
+      reactCode.append("      	<input type=\"text\" name=\"")
+          .append(attribute.getName())
+          .append("\" onChange={handleChange} />\n");
+      reactCode.append("    	</div>\n");
+
+    } else if (step.getAction().value().equals("SELECTION")) {
+      reactCode.append("    	<div>\n");
+      reactCode.append("      	<label>")
+          .append(attribute.getName())
+          .append("</label>\n");
+      reactCode
+          .append("      	<select name=\"\" class=\"\">\n"
+              + "    	<option value=\"\" disabled selected>")
+          .append(attribute.getName())
+          .append("</option></select>\n");
+      reactCode.append("    	</div>\n");
+    }
+  }
+  if (step.getAction().value().equals("REQUEST_OPERATION")) {
+    reactCode
+        .append("  	<button  type=\"submit\" style={{ \n"
+            + "  	border: '1px solid black', \n"
+            + "  	borderRadius: '0px', \n"
+            + "  	backgroundColor: 'lightgray', \n"
+            + "  	margin: '5px', \n"
+            + "  	padding: '10px'\n"
+            + "    }}>")
+        .append(useCase.getName())
+        .append("</button>\n");
+  }
+}
+}
+ else if (useCase.getMode().equals("displayMode")){
         
         reactCode.append("  return (\n");
         reactCode.append("<>");
@@ -244,59 +250,67 @@ reactCode.append(reactTable);
     }
     
         
-     if (useCase.getTemplate().equals("formaSablon")){
-         reactCode.append("      </div>\n");
-         reactCode.append("</form> ); ");
-     } 
-     if (useCase.getTemplate().equals("tableSablon")){
-         reactCode.append("      </div>\n");
-         reactCode.append(("</>);"));
-     }
-     
-        
-        reactCode.append("};\n\n");
-        reactCode.append("export default ").append(useCase.getName()).append("Component;\n");
+     if (useCase.getMode().equals("formMode")) {
+  reactCode.append("  	</div>\n");
+  reactCode.append("</form> ); ");
+}
+if (useCase.getMode().equals("tableMode")) {
+  reactCode.append("  	</div>\n");
+  reactCode.append(("</>);"));
+}
+reactCode.append("};\n\n");
+reactCode.append("export default ")
+    .append(useCase.getName())
+    .append("Component;\n");
 
-        return reactCode.toString();
-    }
+return reactCode.toString();
+}
+
 //ovaj deo dalje ne zavisi od mojih Use case tako da necu ga trenutno zanemarujem i ostavljam ovakvog
     private static String generateAppJs(List<String> componentNames) {
         StringBuilder appJs = new StringBuilder();
-        appJs.append("import React from 'react';\n");
-        appJs.append("import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';\n");
+appJs.append("import React from 'react';\n");
+appJs.append(
+    "import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';\n");
+for (String componentName : componentNames) {
+  appJs.append("import ")
+      .append(componentName)
+      .append(" from './")
+      .append(componentName)
+      .append("';\n");
+}
 
-        for (String componentName : componentNames) {
-            appJs.append("import ").append(componentName).append(" from './").append(componentName).append("';\n");
-        }
-
-        appJs.append("\nconst App = () => (\n");
-        appJs.append("  <Router>\n");
-        appJs.append("    <div>\n");
-        appJs.append("      <nav>\n");
-        appJs.append("        <ul>\n");
-
-        for (String componentName : componentNames) {
-            appJs.append("          <li>\n");
-            appJs.append("            <Link to=\"/").append(componentName.toLowerCase()).append("\">").append(componentName).append("</Link>\n");
-            appJs.append("          </li>\n");
-        }
-
-        appJs.append("        </ul>\n");
-        appJs.append("      </nav>\n");
-        appJs.append("      <Routes>\n");
-
-        for (String componentName : componentNames) {
-            appJs.append("        <Route path=\"/").append(componentName.toLowerCase()).append("\" element={<").append(componentName).append(" />} />\n");
-        }
-
-        appJs.append("      </Routes>\n");
-        appJs.append("    </div>\n");
-        appJs.append("  </Router>\n");
-        appJs.append(");\n\n");
-        appJs.append("export default App;\n");
-
-        return appJs.toString();
-    }
+       appJs.append("\nconst App = () => (\n");
+appJs.append("  <Router>\n");
+appJs.append("	<div>\n");
+appJs.append("  	<nav>\n");
+appJs.append("    	<ul>\n");
+for (String componentName : componentNames) {
+  appJs.append("      	<li>\n");
+  appJs.append("        	<Link to=\"/")
+      .append(componentName.toLowerCase())
+      .append("\">")
+      .append(componentName)
+      .append("</Link>\n");
+  appJs.append("      	</li>\n");
+}
+appJs.append("    	</ul>\n");
+appJs.append("  	</nav>\n");
+appJs.append("  	<Routes>\n");
+for (String componentName : componentNames) {
+  appJs.append("    	<Route path=\"/")
+      .append(componentName.toLowerCase())
+      .append("\" element={<")
+      .append(componentName)
+      .append(" />} />\n");
+}
+appJs.append("  	</Routes>\n");
+appJs.append("	</div>\n");
+appJs.append("  </Router>\n");
+appJs.append(");\n\n");
+appJs.append("export default App;\n");
+return appJs.toString();
+}
 
     private static void saveToFile(String fileName, String content) throws IOException {
         Files.write(Paths.get(fileName), content.getBytes());
@@ -319,7 +333,7 @@ reactCode.append(reactTable);
             index += textToInsertAfter.length();
             reactCode.insert(index, newCode);
         } else {
-            System.out.println("Text not found in the existing code.");
+            System.out.println("textToInsertAfterNotFound: " +textToInsertAfter);
         }
     }
     
@@ -343,9 +357,7 @@ reactCode.append(reactTable);
             if (typeBased==true && general==true && typeBased==true) return;
             if (attribute.getValidation().value().equals("generalContext") && general==false){
                 
-                String textToInsertAfter = "const handleChange = (e) => {\n" +
-"    setFormData({ ...formData, [e.target.name]: e.target.value });\n" +
-"  };\n";
+                String textToInsertAfter = "const [formData, setFormData] = useState({});";
                 switch (attribute.getName()){
                     case "username" : String newCodeUsername = "function validateUsername ()\n {"
                             + "let usernameValid = true;"
@@ -437,24 +449,23 @@ reactCode.append(reactTable);
                         break;
                     default: continue;
                 }
-    //proveriti da li postoji bolji nacin za ovo i da li radi u svim slucajevima. za sada da, samo nisam 100% sigurna zasto
                 if (pass && user && name && surname && phone && email )
                 general=true;
             
             }
-          AttributeProperties ap = new AttributeProperties("src/main/resources/specificContext.properties");
-         if (attribute.getValidation().value().equals("specificContext") ){
-           
-             System.out.println("uslo u specific Context za atribut: "+attribute);
+          AttributeProperties ap =
+    new AttributeProperties("src/main/resources/specificContext.properties");
+if (attribute.getValidation().value().equals("domainContext")) {
+  System.out.println("uslo u specific Context za atribut: " + attribute);
+
              
             
-             
-             //ovo se radi na nivou aplikacije. pravi se fajl za koji je kljucna faza prikupljanja zahteva. specificContext.properties
              if (attribute.getType().value().equalsIgnoreCase("NUMBER")){
+                 System.out.println("uslo u NUMBER za: "+attribute);
                   if (!once)
              { 
-             insertCodeBeforeText(reactCode, "return (\n" +
-"    <form onSubmit={handleSubmit}>", "function validateNumericAttribute(attributeName, attributeValue, donjaGranica, gornjaGranica ) {\n" +
+             
+             insertCodeBeforeText(reactCode, "const [formData, setFormData] = useState({});", "function validateNumericAttribute(attributeName, attributeValue, donjaGranica, gornjaGranica ) {\n" +
 "  let attributeValid = true;\n" +
 "  if (formData.hasOwnProperty(attributeName)) {\n" +
 "\n" +
@@ -482,14 +493,12 @@ reactCode.append(reactTable);
              if (attribute.getType().value().equalsIgnoreCase("STRING")){
                   if (!onceSpecific)
              { 
-             insertCodeBeforeText(reactCode, "return (\n" +
-"    <form onSubmit={handleSubmit}>", "function validateTextFinalValues(textInput, allowedValues) {\n" +
+             insertCodeBeforeText(reactCode, "const [formData, setFormData] = useState({});", "function validateTextFinalValues(textInput, allowedValues) {\n" +
 "    if (!allowedValues.includes(textInput)) {\n" +
 "        console.log(\"nedozvoljena vrednost unosa\");\n" +
 "    } else return true;\n" +
 "};");
-             insertCodeBeforeText(reactCode, "return (\n" +
-"    <form onSubmit={handleSubmit}>", "function validateTextContainingValues(textInput, allowedValues) {\n" +
+             insertCodeBeforeText(reactCode, "const [formData, setFormData] = useState({});", "function validateTextContainingValues(textInput, allowedValues) {\n" +
 "    for (let value of allowedValues) {\n" +
 "        if (textInput.includes(value)) {\n" +
 "            return true;\n" +
@@ -521,8 +530,7 @@ reactCode.append(reactTable);
 "    console.log('Neispravan unos');\n" +
 "  }\n" +
 "}; \n";
-                insertCodeBeforeText(reactCode, "return (\n" +
-"    <form onSubmit={handleSubmit}>", submitFunction);
+                insertCodeBeforeText(reactCode, "const [formData, setFormData] = useState({});", submitFunction);
     }
 
     private static StringBuilder formatValidationFunctions(LinkedList<String> scared) {
@@ -573,8 +581,9 @@ reactCode.append(reactTable);
     if (index != -1) {
         reactCode.insert(index, newCode);
     } else {
-        System.out.println("Text not found in the existing code.");
+        System.out.println("nije pronadjen odgovarajuci tekst");
     }
     }
    
 }
+//NESTO NE VALJA SA INSERTCODEBEFORE AND AFTER TEXT I ZATO NE RADE SPECIFIC CONTEXT. PROVERITI 

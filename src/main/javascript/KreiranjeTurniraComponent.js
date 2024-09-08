@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 
 const KreiranjeTurniraComponent = () => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   function validateTextFinalValues(textInput, allowedValues) {
     if (!allowedValues.includes(textInput)) {
         console.log("nedozvoljena vrednost unosa");
@@ -27,34 +21,40 @@ const KreiranjeTurniraComponent = () => {
     console.log('Neispravan unos');
   }
 }; 
-return (
-    <form onSubmit={handleSubmit}>
-      <h2>KreiranjeTurnira</h2>
-      <div>
-        <div>
-          <label>naziv</label>
-          <input type="text" name="naziv" onChange={handleChange} />
-        </div>
-        <div>
-          <label>mesto</label>
-          <input type="text" name="mesto" onChange={handleChange} />
-        </div>
-        <div>
-          <label>tip</label>
-          <input type="text" name="tip" onChange={handleChange} />
-        </div>
-        <div>
-          <label>tempo</label>
-          <input type="text" name="tempo" onChange={handleChange} />
-        </div>
-      <button  type="submit" style={{ 
-      border: '1px solid black', 
-      borderRadius: '0px', 
-      backgroundColor: 'lightgray', 
-      margin: '5px', 
-      padding: '10px'
+const [formData, setFormData] = useState({});
+
+  const handleChange = (e) => {
+	setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  return (
+	<form onSubmit={handleSubmit}>
+  	<h2>KreiranjeTurnira</h2>
+  	<div>
+    	<div>
+      	<label>naziv</label>
+      	<input type="text" name="naziv" onChange={handleChange} />
+    	</div>
+    	<div>
+      	<label>mesto</label>
+      	<input type="text" name="mesto" onChange={handleChange} />
+    	</div>
+    	<div>
+      	<label>tip</label>
+      	<input type="text" name="tip" onChange={handleChange} />
+    	</div>
+    	<div>
+      	<label>tempo</label>
+      	<input type="text" name="tempo" onChange={handleChange} />
+    	</div>
+  	<button  type="submit" style={{ 
+  	border: '1px solid black', 
+  	borderRadius: '0px', 
+  	backgroundColor: 'lightgray', 
+  	margin: '5px', 
+  	padding: '10px'
     }}>KreiranjeTurnira</button>
-      </div>
+  	</div>
 </form> ); };
 
 export default KreiranjeTurniraComponent;

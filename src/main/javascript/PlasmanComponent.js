@@ -40,7 +40,7 @@ const cellStyle = {
       margin: '5px', 
       padding: '10px'
     }}>Plasman</button>
-      </div>
+  	</div>
 </>);};
 
 export default PlasmanComponent;
